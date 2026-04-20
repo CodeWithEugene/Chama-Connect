@@ -131,7 +131,7 @@ test("deep interaction audit", async ({ page }) => {
   for (const action of ["Approve","Reject","View","Details"]) {
     const btn = page.locator(`button:has-text("${action}"), a:has-text("${action}")`).first();
     if (await btn.isVisible().catch(() => false)) {
-      await btn.click();
+      await btn.click({ timeout: 5000 }).catch(() => {});
       await page.waitForTimeout(1500);
       await shot(page, `05b_tx_${action.toLowerCase()}`);
       await page.keyboard.press("Escape");

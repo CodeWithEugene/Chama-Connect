@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–043 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–052 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -145,6 +145,15 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-041](bugs/BUG-041-transactions-idor-userid-filter.md) | **`GET /api/proxy/transactions?userId=<victim>` returns that user's full financial history (IDOR); no pagination** | **Critical** | Open |
 | [BUG-042](bugs/BUG-042-group-delete-leaks-mpesa-keys.md) | **`DELETE /api/proxy/groups/:id` response embeds full M-Pesa Daraja credentials in `GroupSettings`** | **Critical** | Open |
 | [BUG-043](bugs/BUG-043-notifications-post-500.md) | `POST /api/proxy/notifications` returns `500` on every call; no role guard | Medium | Open |
+| [BUG-044](bugs/BUG-044-path-traversal-api-routes.md) | **Path traversal: `GET /api/proxy/groups/../settings` resolves to `/settings`, bypassing route guards — 10+ cross-path variants confirmed including M-Pesa credential exfiltration** | **Critical** | Open |
+| [BUG-045](bugs/BUG-045-cors-localhost-credentialed.md) | CORS: `localhost:3000` gets duplicate `ACAO: localhost, chamaconnect.io` + `ACAC: true, true` — any localhost JS can make authenticated cross-origin requests | High | Open |
+| [BUG-046](bugs/BUG-046-no-server-side-token-revocation.md) | JWT remains valid after logout — `DELETE /api/auth/session` only clears cookie; Bearer token confirmed working post-"logout" with no expiry | High | Open |
+| [BUG-047](bugs/BUG-047-otp-brute-force-no-lockout.md) | Password-reset OTP brute force: 15+ attempts, zero rate limit or lockout — enables full account takeover via OTP exhaustion | High | Open |
+| [BUG-048](bugs/BUG-048-approve-null-ref-undefined-role.md) | Transaction approve leaks `"Only undefined can approve"` (null dereference); reject returns `500` even with reason | Medium | Open |
+| [BUG-049](bugs/BUG-049-groups-types-routing-500.md) | `GET /api/proxy/groups/types` returns `500` — routing collision, `"types"` treated as MongoDB ObjectId | Medium | Open |
+| [BUG-050](bugs/BUG-050-stored-xss-group-name.md) | Stored XSS: group name stores raw `<script>` tags without sanitization — persists in DB, returned in API responses | High | Open |
+| [BUG-051](bugs/BUG-051-roles-routing-collision-500.md) | `GET /api/proxy/roles/permissions` + `/roles/assign` return `500` (routing collision) | Medium | Open |
+| [BUG-052](bugs/BUG-052-notifications-routing-500.md) | `/notifications/mark-all-read` (wrong method), `/clear` (all methods), `/all` all return `500` | Medium | Open |
 
 **Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 

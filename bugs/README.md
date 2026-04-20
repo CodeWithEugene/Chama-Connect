@@ -64,6 +64,15 @@ Update this index when a new bug is filed.
 | [BUG-041](./BUG-041-transactions-idor-userid-filter.md) | **`GET /api/proxy/transactions?userId=<other>` returns another user's full transaction history (IDOR); no server-side pagination** | **Critical** | API / authz | Open |
 | [BUG-042](./BUG-042-group-delete-leaks-mpesa-keys.md) | **`DELETE /api/proxy/groups/:id` response embeds full M-Pesa Daraja credentials in `GroupSettings` — a second exfiltration path independent of BUG-028** | **Critical** | API / secrets | Open |
 | [BUG-043](./BUG-043-notifications-post-500.md) | `POST /api/proxy/notifications` returns `500 Internal Server Error` on every call; no role guard means any user could reach the broken create-notification handler | Medium | API / stability | Open |
+| [BUG-044](./BUG-044-path-traversal-api-routes.md) | **Path traversal: `GET /api/proxy/groups/../settings` resolves to `/api/proxy/settings`, bypassing route guards — all 10+ cross-path combinations confirmed working including M-Pesa credential exfiltration** | **Critical** | API / routing | Open |
+| [BUG-045](./BUG-045-cors-localhost-credentialed.md) | CORS misconfiguration: `localhost:3000` receives `Access-Control-Allow-Origin: http://localhost:3000, https://chamaconnect.io` + duplicate `ACAC: true, true` — any localhost JS context can make credentialed cross-origin requests | High | API / headers | Open |
+| [BUG-046](./BUG-046-no-server-side-token-revocation.md) | JWT not invalidated on logout: `DELETE /api/auth/session` clears the cookie but the Bearer token remains valid indefinitely (confirmed `200` after "logout") — no revocation mechanism exists | High | Auth / session management | Open |
+| [BUG-047](./BUG-047-otp-brute-force-no-lockout.md) | Password-reset OTP brute force: 15+ attempts accepted without lockout or `429`, combined with BUG-034 (no reset rate limit) enables full account takeover | High | Auth / API | Open |
+| [BUG-048](./BUG-048-approve-null-ref-undefined-role.md) | Transaction approval endpoint leaks internal state: `"Only undefined can approve this transaction"` (null dereference); rejection endpoint returns `500` even when reason is provided | Medium | API / stability | Open |
+| [BUG-049](./BUG-049-groups-types-routing-500.md) | `GET /api/proxy/groups/types` and `/groups/group-types` return `500` — routing collision where `"types"` is passed as a Mongoose ObjectId | Medium | API / routing | Open |
+| [BUG-050](./BUG-050-stored-xss-group-name.md) | Stored XSS: group name accepts raw HTML including `<script>` tags without any sanitization — payload persists in DB, returned in API responses, exploitable in email/PDF/SSR contexts | High | API / input validation | Open |
+| [BUG-051](./BUG-051-roles-routing-collision-500.md) | `GET /api/proxy/roles/permissions` and `/roles/assign` return `500` — same routing collision pattern as BUG-049 | Medium | API / routing | Open |
+| [BUG-052](./BUG-052-notifications-routing-500.md) | `GET /api/proxy/notifications/mark-all-read`, `/clear`, `/all` return `500` (routing collision + unimplemented handler); `clear` broken on all methods | Medium | API / routing | Open |
 
 ## Severity scale
 
