@@ -8,9 +8,13 @@
 |---|---|
 | Severity | Medium |
 | Surface | Public site / contact page |
-| Status | Open |
+| Status | Open — not reproduced on latest run (2026-04-20T09-40-50Z); retaining while intermittent |
 | Discovered | 2026-04-20 |
 | Discovered by | Playwright recon (page error) |
+
+## Update — 2026-04-20 (second recon)
+
+A follow-up Playwright run (`recon/artifacts/2026-04-20T09-40-50-508Z/errors.json`) produced **zero** `pageerror` entries for `/contact`. The hydration mismatch was not reproducible this time, which is consistent with a race-sensitive root cause (Cloudflare email obfuscation, which has since stopped rewriting the page — see BUG-004's fixed status). Leaving the ticket open until the verification steps below pass across three consecutive recon runs with a warm CF cache and a cold one, on both 4G-throttled and unthrottled profiles, because hydration bugs are notoriously Heisenbergian.
 
 ## Evidence
 

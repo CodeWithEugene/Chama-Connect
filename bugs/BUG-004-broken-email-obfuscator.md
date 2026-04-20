@@ -8,11 +8,24 @@
 |---|---|
 | Severity | Medium |
 | Surface | Public site / UX |
-| Status | Open |
+| Status | Fixed (verified 2026-04-20 in authenticated recon) |
 | Discovered | 2026-04-20 |
 | Discovered by | Manual (curl) |
+| Verified fixed | 2026-04-20 — Playwright recon |
 
-## Evidence
+## Status update — 2026-04-20 (fixed)
+
+Re-captured on `recon/artifacts/2026-04-20T09-40-50-508Z/html/public_contact__chamaconnect_io_contact.html`. The Email card now renders a working mailto anchor:
+
+```html
+<a class="text-green-600 font-semibold block mt-3" href="mailto:muiaalimited@gmail.com">muiaalimited@gmail.com</a>
+```
+
+`grep '\[email protected\]'` on the page returns **0 matches**. No `__cf_email__` Cloudflare obfuscator residue either. The original symptom is resolved on the live site.
+
+**Caveat:** the site now uses `muiaalimited@gmail.com`, which does not match the hackathon brief's `support@muiaa.com` (the canonical address suggested in BUG-003's single-source-of-truth proposal). If the product is meant to migrate onto its own domain at some point, this just moves the inconsistency; the contact-info-canonicalization fix in BUG-003 should still happen.
+
+## Original evidence (historical)
 
 From `/tmp/cc_contact.html`:
 
@@ -22,7 +35,7 @@ Reach us anytime for inquiries or support.
 [email protected]
 ```
 
-The string `[email protected]` is rendered verbatim in the Email card on `/contact`. Users see the WordPress/Cloudflare placeholder instead of an actual address.
+The string `[email protected]` was rendered verbatim in the Email card on `/contact`. Users saw the WordPress/Cloudflare placeholder instead of an actual address.
 
 ## User impact
 

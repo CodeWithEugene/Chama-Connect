@@ -1,0 +1,14 @@
+HTTP/2 200 
+date: Mon, 20 Apr 2026 09:58:47 GMT
+content-type: application/json
+server: cloudflare
+vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch
+set-cookie: auth_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5Y2E5NTgzMTg1YzRkZWJjOGU5NGRjNSIsInBob25lIjoiKzI1NDc0NjE1MjAwOCIsImZpcnN0TmFtZSI6IkV1Z2VuZSIsImxhc3ROYW1lIjoiTXV0ZW1iZWkiLCJyb2xlSWQiOiI2OWM1MGM4YTM4ZjA4MDcwYTgzYmQzNWIiLCJlbWFpbCI6ImV1Z2VuZWdhYnJpZWwua2VAZ21haWwuY29tIiwicm9sZSI6eyJpZCI6IjY5YzUwYzhhMzhmMDgwNzBhODNiZDM1YiIsIm5hbWUiOiJVc2VyIn0sImlzU3VwZXJhZG1pbiI6ZmFsc2UsInVzZXJUeXBlIjoiUkVHVUxBUiIsImlhdCI6MTc3NjY3OTEyN30.BpTSK7ZL7f4Nz7nUZo_NO2ilKvCvtDU64Je9AMWRBhM; Path=/; Expires=Mon, 27 Apr 2026 09:58:47 GMT; Max-Age=604800; Secure; HttpOnly; SameSite=strict
+cf-cache-status: DYNAMIC
+nel: {"report_to":"cf-nel","success_fraction":0.0,"max_age":604800}
+report-to: {"group":"cf-nel","max_age":604800,"endpoints":[{"url":"https://a.nel.cloudflare.com/report/v4?s=PI4IfZixtFZp91FyrCKdGvteNk4oDWS7aMYATFxw50HGscZl9oaUvH2XKCGS1L9IWKUaY5UkbFqRd5tNpLssHk10N0p6wlJiWT%2Binty7udu7Ad%2BaZqLOaBiRLv8A3C3953I%3D"}]}
+content-encoding: gzip
+cf-ray: 9ef34ae2fa98acb0-NBO
+alt-svc: h3=":443"; ma=86400
+
+{"message":"Session created"}
