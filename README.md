@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–038 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–043 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -139,7 +139,12 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-035](bugs/BUG-035-permissions-endpoint-wrong.md) | `GET /api/proxy/permissions` returns `201 Created` with a role-list payload (routing + status bug) | Medium | Open |
 | [BUG-036](bugs/BUG-036-notifications-all-500.md) | `GET /api/proxy/notifications/all` returns `500 Internal Server Error` on every call | Medium | Open |
 | [BUG-037](bugs/BUG-037-authz-returns-400-not-403.md) | Authorization failures return `400 Bad Request` instead of `401`/`403` across signin + group + user endpoints | Medium | Open |
-| [BUG-038](bugs/BUG-038-signup-contradictory-fields.md) | Signup response contains contradictory status fields (`isActive:false` + `accountStatus:"ACTIVE"` + `activatedAt` populated) | Medium | Open |
+| [BUG-038](bugs/BUG-038-signup-contradictory-fields.md) | Signup response contradictory status fields (`isActive:false` + `accountStatus:"ACTIVE"` + `activatedAt` populated) | Medium | Open |
+| [BUG-039](bugs/BUG-039-nosql-object-inputs-crash-signin.md) | Signin/password-reset accept MongoDB operator objects → `500` crash (latent NoSQL injection) | High | Open |
+| [BUG-040](bugs/BUG-040-roles-crud-by-any-user.md) | **Any `User` can `POST /api/proxy/roles` (create roles) + `PATCH /api/proxy/roles/:id` (rename `SuperAdmin`)** | **Critical** | Open |
+| [BUG-041](bugs/BUG-041-transactions-idor-userid-filter.md) | **`GET /api/proxy/transactions?userId=<victim>` returns that user's full financial history (IDOR); no pagination** | **Critical** | Open |
+| [BUG-042](bugs/BUG-042-group-delete-leaks-mpesa-keys.md) | **`DELETE /api/proxy/groups/:id` response embeds full M-Pesa Daraja credentials in `GroupSettings`** | **Critical** | Open |
+| [BUG-043](bugs/BUG-043-notifications-post-500.md) | `POST /api/proxy/notifications` returns `500` on every call; no role guard | Medium | Open |
 
 **Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 

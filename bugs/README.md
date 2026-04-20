@@ -59,6 +59,11 @@ Update this index when a new bug is filed.
 | [BUG-036](./BUG-036-notifications-all-500.md) | `GET /api/proxy/notifications/all` returns `500 Internal Server Error` on every call | Medium | API / stability | Open |
 | [BUG-037](./BUG-037-authz-returns-400-not-403.md) | Authorization failures return `400 Bad Request` (should be `401`/`403`) across signin, group PATCH/DELETE, user DELETE | Medium | API / REST semantics | Open |
 | [BUG-038](./BUG-038-signup-contradictory-fields.md) | Signup response contains contradictory status fields (`isActive:false` + `accountStatus:"ACTIVE"` + `activatedAt` populated) | Medium | Data model | Open |
+| [BUG-039](./BUG-039-nosql-object-inputs-crash-signin.md) | Signin/password-reset accept object-valued `email`/`password` (MongoDB operators) and return `500` — latent NoSQL injection surface | High | Auth / API | Open |
+| [BUG-040](./BUG-040-roles-crud-by-any-user.md) | **Any authenticated `User` can `POST /api/proxy/roles` (create roles) and `PATCH /api/proxy/roles/:id` (rename/modify ANY role, including `SuperAdmin`)** | **Critical** | API / authz | Open |
+| [BUG-041](./BUG-041-transactions-idor-userid-filter.md) | **`GET /api/proxy/transactions?userId=<other>` returns another user's full transaction history (IDOR); no server-side pagination** | **Critical** | API / authz | Open |
+| [BUG-042](./BUG-042-group-delete-leaks-mpesa-keys.md) | **`DELETE /api/proxy/groups/:id` response embeds full M-Pesa Daraja credentials in `GroupSettings` — a second exfiltration path independent of BUG-028** | **Critical** | API / secrets | Open |
+| [BUG-043](./BUG-043-notifications-post-500.md) | `POST /api/proxy/notifications` returns `500 Internal Server Error` on every call; no role guard means any user could reach the broken create-notification handler | Medium | API / stability | Open |
 
 ## Severity scale
 
