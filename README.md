@@ -4,9 +4,9 @@
 
 # ChamaConnect Hackathon Submission — ChamaPay
 
-**Entry for:** MUIAA Ltd × Salamander Community — ChamaConnect Virtual Hackathon
-**Theme:** Reimagining Digital Chamas for the Future
-**Deadline:** Friday, 2026-04-24 at 23:59 EAT
+**Entry for:** MUIAA Ltd × Salamander Community — ChamaConnect Virtual Hackathon  
+**Theme:** Reimagining Digital Chamas for the Future  
+**Deadline:** Friday, 2026-04-24 at 23:59 EAT  
 **Entrant:** Eugene Mutembei (`eugenegabriel.ke@gmail.com`) & Sidney Muriuki (`sidneybarakamuriuki1@gmail.com`)
 
 > **What we built:** an M-Pesa-native contribution auto-reconciliation module that closes the single biggest gap [chamaconnect.io](https://chamaconnect.io) has today — the feature its own features page marks **"Coming Soon."** Drop-in Next.js, double-entry ledger, idempotent Daraja callbacks, USSD access for feature phones, on-chain anchoring of daily settlements.
@@ -18,17 +18,19 @@
 ```
 Chama-Connect/
 ├── README.md                   ← you are here
+├── CONTRIBUTING.md             ← how to contribute, PR checks, bug workflow
+├── LICENSE
 ├── .env                        ← login creds to chamaconnect.io (gitignored)
-├── .env.example                ← root env template
+├── .env.example                ← root env template (recon)
 │
 ├── recon/                      ← Playwright recon of the live platform
 │   ├── tests/explore.spec.ts   ← logs in, crawls dashboard, records every XHR
 │   └── artifacts/<timestamp>/  ← screenshots, HTML, network logs per run
 │
 ├── bugs/                       ← bug register (evidence + root cause + fix)
-│   ├── README.md               ← index of all tracked issues
+│   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug
+│   └── BUG-NNN-*.md            ← one file per bug (001–015 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -46,9 +48,9 @@ Chama-Connect/
 │   └── .env.example
 │
 └── docs/
-    ├── TECHNICAL-PROPOSAL.md   ← the 2-page judges' proposal
-    ├── Anchor.sol              ← reference on-chain contract
-    └── ARCHITECTURE.md         ← diagrams + data flow
+    ├── TECHNICAL-PROPOSAL.md   ← judges' technical write-up
+    ├── DEMO.md                 ← 90-second demo script
+    └── Anchor.sol              ← reference on-chain contract
 ```
 
 ## Quick start — see it run in 90 seconds
@@ -64,6 +66,8 @@ npm run dev                      # http://localhost:3100
 
 Open [http://localhost:3100/chamas/ACME](http://localhost:3100/chamas/ACME).
 
+Step-by-step narration for judges: [docs/DEMO.md](docs/DEMO.md).
+
 In another shell, fire a simulated M-Pesa payment through the real reconciliation engine:
 
 ```bash
@@ -72,13 +76,13 @@ curl -X POST http://localhost:3100/api/dev/simulate-c2b \
      -d '{"msisdn":"254711223344","amount":500,"billRef":"ACME-202604"}'
 ```
 
-The dashboard updates within 3 seconds; the payment shows as **matched at 100% confidence** to member *Brian Otieno* for cycle `2026-04`.
+The dashboard updates within a few seconds; the payment shows as **matched at 100% confidence** to member *Brian Otieno* for cycle `2026-04`.
 
 Run the test suite:
 
 ```bash
 npm test
-# 6 reconciliation tests pass: exact match, idempotency, MSISDN fallback,
+# 6 reconciliation tests: exact match, idempotency, MSISDN fallback,
 # unmatched path, double-entry balance, mixed-format period parsing.
 ```
 
@@ -90,25 +94,35 @@ From [chamaconnect.io/features](https://chamaconnect.io/features):
 
 In Kenya, ~99% of chama money moves on M-Pesa. Without reconciliation, every chama admin still reads their M-Pesa SMS inbox line-by-line and types amounts into the platform manually — which is exactly the mechanism behind [FSD Kenya's documented 13% chama embezzlement rate](https://www.money254.co.ke/post/chama-revolution-what-successful-chamas-know-do-why-many-fail).
 
-We built the fix. See [docs/TECHNICAL-PROPOSAL.md](docs/TECHNICAL-PROPOSAL.md) for the full write-up.
+We built the fix in this repo. See [docs/TECHNICAL-PROPOSAL.md](docs/TECHNICAL-PROPOSAL.md) for the full write-up.
 
-## Other bugs we found on the live site
+## Bugs identified on the live site (chamaconnect.io)
 
-See [bugs/README.md](bugs/README.md) for the full, up-to-date register. Highlights:
+Each row links to a standalone report (evidence, impact, root cause, proposed fix, verification). The canonical index and filing workflow live in [bugs/README.md](bugs/README.md).
 
-- **BUG-001** — every public page ships with `<title>Create Next App</title>` (default Next.js boilerplate). Kills SEO and WhatsApp/social link previews.
-- **BUG-002** — Footer links `Features / Pricing / Resources / Blog / Community / Events` all point to `#`.
-- **BUG-003** — contact phone number is inconsistent across the site and the hackathon brief (three different numbers).
-- **BUG-004** — `/contact` page renders literal `[email protected]` (broken Cloudflare obfuscator).
-- **BUG-005** — login lacks phone-OTP / 2FA / social sign-in *exposed in UI* (server-side `requires2FA` flag exists but no flow to trigger it).
-- **BUG-006** — register country selector defaults to `International` despite Kenya-first product.
-- **Typo** — group-types API returns `MERRRY_GO_AROUND` (triple R, plus "around" instead of "round").
+| ID | Title | Severity | Status |
+|:---:|---|:---:|:---:|
+| [BUG-001](bugs/BUG-001-default-nextjs-metadata.md) | Every public page ships with default Next.js boilerplate `<title>` + `<meta description>` | High | Open |
+| [BUG-002](bugs/BUG-002-broken-footer-links.md) | Footer `Features`, `Pricing`, `Resources`, `Blog`, `Community`, `Events` all point to `#` | Medium | Open |
+| [BUG-003](bugs/BUG-003-inconsistent-contact-phone.md) | Contact page phone number does not match footer / hackathon-brief contact number | Medium | Open |
+| [BUG-004](bugs/BUG-004-broken-email-obfuscator.md) | Contact page renders literal `[email protected]` instead of an email address | Medium | Open |
+| [BUG-005](bugs/BUG-005-no-mfa-on-login.md) | Login has no 2FA, no phone OTP, no social login — for a money platform | High | Open |
+| [BUG-006](bugs/BUG-006-register-country-default.md) | Register country selector defaults to `International` despite Kenya focus | Low | Open |
+| [BUG-007](bugs/BUG-007-no-mpesa-integration.md) | M-Pesa integration marked "Coming Soon" — the #1 Kenyan chama requirement | Critical | Open → fixed by ChamaPay module |
+| [BUG-008](bugs/BUG-008-signin-says-user-created.md) | `POST /users/signin` returns `"message": "User Created"` on every login | High | Open |
+| [BUG-009](bugs/BUG-009-merrry-typo-group-types.md) | `MERRRY_GO_AROUND` typo (triple-R, wrong phrase) in group-types endpoints and Create Chama dropdown | High | Open |
+| [BUG-010](bugs/BUG-010-duplicate-group-types-endpoints.md) | Two different `group-types` endpoints with inconsistent (swapped) schemas | High | Open |
+| [BUG-011](bugs/BUG-011-websocket-localhost-hardcoded.md) | Notifications page opens `ws://localhost:3080` in production — real-time notifications broken | Critical | Open |
+| [BUG-012](bugs/BUG-012-get-all-groups-failed-to-fetch.md) | `/admin/chamas` throws `TypeError: Failed to fetch` and shows "create your first chama" on network errors | High | Open |
+| [BUG-013](bugs/BUG-013-jwt-in-response-body.md) | Signin returns the raw JWT in the response body (also in httpOnly cookie) — XSS-to-takeover path | High | Open |
+| [BUG-014](bugs/BUG-014-hydration-error-contact.md) | `/contact` throws React error #418 (hydration mismatch) | Medium | Open |
+| [BUG-015](bugs/BUG-015-roles-have-no-permissions.md) | Every role record has `permissions: []` — authz likely enforced by role name only | High | Open |
 
-Each bug has a dedicated file with evidence, root cause, and a minimum-viable fix diff.
+**Severity (short):** Critical → core job blocked; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 
 ## Reproducing the authenticated recon
 
-Login creds live in `./.env` (gitignored). The Playwright recon logs in, crawls every authenticated route, screenshots each, records every XHR, and dumps JSON to `recon/artifacts/<timestamp>/`:
+Login creds live in `./.env` at the repo root (gitignored). Copy from [.env.example](.env.example). The Playwright recon logs in, crawls every authenticated route, screenshots each, records every XHR, and dumps JSON to `recon/artifacts/<timestamp>/`:
 
 ```bash
 cd recon
@@ -118,12 +132,17 @@ npm test
 ```
 
 Every run produces:
-- `screenshots/` — full-page screenshots of every route visited
-- `html/` — full rendered HTML of every route
-- `network/requests.json` — every XHR / fetch / document with request + response body
-- `summary.json` — one-line overview
 
-We ship these artifacts with the submission so judges can verify our bug claims independently.
+- `screenshots/` — full-page screenshots of every route visited  
+- `html/` — full rendered HTML of every route  
+- `network/requests.json` — every XHR / fetch / document with request + response body  
+- `summary.json` — one-line overview  
+
+Large artifact trees stay gitignored; retain representative runs for submission evidence if needed.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for local setup in `chamapay/` and `recon/`, commands to run before a PR (`lint`, `typecheck`, `test`, `build`), and how to file new bugs under `bugs/`.
 
 ## License
 
