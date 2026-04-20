@@ -175,15 +175,18 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-071](bugs/BUG-071-query-filters-silently-ignored.md) | `?from`, `?to`, `?since`, `?createdAt` filters accepted but silently ignored on `/transactions`, `/notifications`, `/groups` — dashboard widgets silently show all-time data instead of the filtered range | High | Open |
 | [BUG-072](bugs/BUG-072-users-admin-role-name-mismatch.md) | `/api/proxy/users/admin` uses ad-hoc role-name strings (`"super admins"` on GET vs `"admins"` on DELETE) — neither matches the canonical role taxonomy; 400 returned instead of 403 | Medium | Open |
 | [BUG-073](bugs/BUG-073-email-verification-inconsistent.md) | Email verification enforced at signup (`"Please verify your email before signing in"`) but bypassable via `PATCH /users/update-profile` — strengthens BUG-063 ATO chain | High | Open |
+| [BUG-074](bugs/BUG-074-mass-assignment-silently-discarded.md) | `/users/update-profile` uses a correct write-allowlist (roleId / isSuperadmin / accountStatus can't be hijacked) but returns **200** on unknown keys — no 400 hard-reject, so client typos silently fail to persist | Low | Open |
+| [BUG-075](bugs/BUG-075-form-urlencoded-platform-wide.md) | **Every** `/api/proxy/*` mutation endpoint accepts `application/x-www-form-urlencoded` and `multipart/form-data` — platform-wide CSRF surface (supersedes / escalates BUG-070 from "signin only" to "all mutations") | High | Open |
+| [BUG-076](bugs/BUG-076-live-backendhack-role-persisted.md) | **Live evidence of BUG-040: a `BackendHack` role created during probing still exists in the production `roles` table**, visible to every signed-in user and surfaced in the Create-Chama wizard dropdown | **Critical** | Open |
 
 **Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 
-### Totals — 73 bugs on file (1 fixed, 72 open)
+### Totals — 76 bugs on file (1 fixed, 75 open)
 
-- **15 Critical** — direct financial harm, secrets exposure, or one-shot account takeover (BUG-007 · 011 · 016 · 027 · 028 · 029 · 030 · 040 · 041 · 042 · 044 · 053 · 054 · 058 · 063).
-- **26 High** — auth hardening, BOLA reads, session lifetime, rate limits, stored XSS, filters silently ignored, weak password policy, HSTS, email-verification bypass, SEO metadata, and other exploit amplifiers.
+- **16 Critical** — direct financial harm, secrets exposure, one-shot ATO, or persisted attacker artefacts (BUG-007 · 011 · 016 · 027 · 028 · 029 · 030 · 040 · 041 · 042 · 044 · 053 · 054 · 058 · 063 · 076).
+- **27 High** — auth hardening, BOLA reads, session lifetime, rate limits, stored XSS, filters silently ignored, weak password policy, HSTS, email-verification bypass, platform-wide CSRF surface, SEO metadata, other exploit amplifiers.
 - **27 Medium** — consistency, routing collisions, API shape, accessibility, DNS / TLS posture.
-- **5 Low** — metadata polish, copy typos, stack-leak headers.
+- **6 Low** — metadata polish, copy typos, stack-leak headers, silent API mis-writes.
 
 ### Audit methodology — how those bugs were found
 
