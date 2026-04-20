@@ -47,6 +47,18 @@ Update this index when a new bug is filed.
 | [BUG-024](./BUG-024-multiple-h1-on-public-pages.md) | `/about` has 3 `<h1>` tags; `/contact` and `/faqs` each have 2 — SEO + a11y | Low | Public site / SEO | Open |
 | [BUG-025](./BUG-025-admin-pages-create-next-app-title.md) | Every admin/dashboard page ships with `<title>Create Next App</title>` | Medium | Admin / UX | Open |
 | [BUG-026](./BUG-026-x-powered-by-leaks-stack.md) | `X-Powered-By: Next.js` + `x-nextjs-*` headers leak backend stack on every HTML response | Low (security) | Every HTML response | Open |
+| [BUG-027](./BUG-027-settings-writable-by-any-user.md) | **Any authenticated `User` can `PUT /api/proxy/settings/:id` — platform-wide `loanFee`, `withDrawalFee`, `fineDelayPercentageIncrement` (and likely M-Pesa callback URLs) are attacker-controlled** | **Critical** | API / authz | Open |
+| [BUG-028](./BUG-028-mpesa-credentials-leak.md) | **`GET /api/proxy/settings` returns M-Pesa Daraja `ConsumerKey` / `ConsumerSecret` / `LipaNaMpesaShortPass` + all C2B/B2C/B2B callback URLs to every signed-in user** | **Critical** | API / secrets | Open |
+| [BUG-029](./BUG-029-bola-groups-by-id.md) | **BOLA: `GET /api/proxy/groups/:id` returns any chama's full data (members' names, emails, phones, blockchain address, schedule) to any authenticated user** | **Critical** | API / authz / PII | Open |
+| [BUG-030](./BUG-030-bola-transactions-list.md) | **BOLA: `GET /api/proxy/transactions` returns every chama's transactions (amounts, approvals, crypto hashes) to every signed-in user** | **Critical** | API / authz | Open |
+| [BUG-031](./BUG-031-signin-account-enumeration.md) | Signin reveals which emails/phones are registered (`"Incorrect password"` vs `"Invalid email or phone number"` + 22-byte size + ~500 ms timing delta) | High (security) | Auth / API | Open |
+| [BUG-032](./BUG-032-signup-email-enumeration.md) | Signup leaks registration status via differential error (`"Error creating user…"` fires only on already-registered email) | High (security) | Auth / API | Open |
+| [BUG-033](./BUG-033-backend-directly-exposed.md) | Internal backend reachable from the internet at `/backend/api/v1/*` — doubles the attack surface and bypasses any future proxy-layer mitigations | High (security) | Infrastructure | Open |
+| [BUG-034](./BUG-034-password-reset-no-rate-limit.md) | `/api/proxy/users/request-password-reset` has no per-account rate limit — enables mail bombing, SMS-cost attack, and OTP brute-force prep | High | Auth / API | Open |
+| [BUG-035](./BUG-035-permissions-endpoint-wrong.md) | `GET /api/proxy/permissions` returns `201 Created` with an empty role-list payload (routing bug + status-code misuse) | Medium | API | Open |
+| [BUG-036](./BUG-036-notifications-all-500.md) | `GET /api/proxy/notifications/all` returns `500 Internal Server Error` on every call | Medium | API / stability | Open |
+| [BUG-037](./BUG-037-authz-returns-400-not-403.md) | Authorization failures return `400 Bad Request` (should be `401`/`403`) across signin, group PATCH/DELETE, user DELETE | Medium | API / REST semantics | Open |
+| [BUG-038](./BUG-038-signup-contradictory-fields.md) | Signup response contains contradictory status fields (`isActive:false` + `accountStatus:"ACTIVE"` + `activatedAt` populated) | Medium | Data model | Open |
 
 ## Severity scale
 

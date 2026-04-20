@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–026 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–038 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -128,8 +128,20 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-024](bugs/BUG-024-multiple-h1-on-public-pages.md) | `/about` has 3 `<h1>` tags; `/contact` and `/faqs` each have 2 — SEO + a11y | Low | Open |
 | [BUG-025](bugs/BUG-025-admin-pages-create-next-app-title.md) | Every admin/dashboard page ships with `<title>Create Next App</title>` — tab labels unusable | Medium | Open |
 | [BUG-026](bugs/BUG-026-x-powered-by-leaks-stack.md) | `X-Powered-By: Next.js` + `x-nextjs-*` headers leak backend stack on every HTML response | Low | Open |
+| [BUG-027](bugs/BUG-027-settings-writable-by-any-user.md) | **Any authenticated `User` can `PUT /api/proxy/settings/:id` — platform-wide fees and likely M-Pesa callback URLs are attacker-controlled** | **Critical** | Open |
+| [BUG-028](bugs/BUG-028-mpesa-credentials-leak.md) | **`GET /api/proxy/settings` returns M-Pesa Daraja `ConsumerKey` / `ConsumerSecret` / `LipaNaMpesaShortPass` to every signed-in user** | **Critical** | Open |
+| [BUG-029](bugs/BUG-029-bola-groups-by-id.md) | **BOLA: `GET /api/proxy/groups/:id` returns any chama's full data + members' PII (names, emails, phones) to any authenticated user** | **Critical** | Open |
+| [BUG-030](bugs/BUG-030-bola-transactions-list.md) | **BOLA: `GET /api/proxy/transactions` returns every chama's transactions (amounts, approvals, crypto hashes) to every signed-in user** | **Critical** | Open |
+| [BUG-031](bugs/BUG-031-signin-account-enumeration.md) | Signin reveals which emails/phones are registered (differential error + size + timing) | High | Open |
+| [BUG-032](bugs/BUG-032-signup-email-enumeration.md) | Signup leaks registration status via `"Error creating user…"` on existing emails | High | Open |
+| [BUG-033](bugs/BUG-033-backend-directly-exposed.md) | Internal backend reachable from the internet at `/backend/api/v1/*` — doubles attack surface | High | Open |
+| [BUG-034](bugs/BUG-034-password-reset-no-rate-limit.md) | `/api/proxy/users/request-password-reset` has no per-account rate limit — mail bombing + SMS cost attack | High | Open |
+| [BUG-035](bugs/BUG-035-permissions-endpoint-wrong.md) | `GET /api/proxy/permissions` returns `201 Created` with a role-list payload (routing + status bug) | Medium | Open |
+| [BUG-036](bugs/BUG-036-notifications-all-500.md) | `GET /api/proxy/notifications/all` returns `500 Internal Server Error` on every call | Medium | Open |
+| [BUG-037](bugs/BUG-037-authz-returns-400-not-403.md) | Authorization failures return `400 Bad Request` instead of `401`/`403` across signin + group + user endpoints | Medium | Open |
+| [BUG-038](bugs/BUG-038-signup-contradictory-fields.md) | Signup response contains contradictory status fields (`isActive:false` + `accountStatus:"ACTIVE"` + `activatedAt` populated) | Medium | Open |
 
-**Severity (short):** Critical → core job blocked; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
+**Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 
 ## Reproducing the authenticated recon
 
