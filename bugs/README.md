@@ -91,6 +91,9 @@ Update this index when a new bug is filed.
 | [BUG-068](./BUG-068-missing-caa-record.md) | No `CAA` DNS record on `chamaconnect.io` — any publicly-trusted CA in the world may issue certs for the domain | Medium | DNS / TLS | Open |
 | [BUG-069](./BUG-069-404-returns-25kb-homepage.md) | Every unmatched path (including `/.env`, `/.git/HEAD`, `/swagger`, `/api/health`) returns a 26 KB HTML clone of the homepage — 130× bandwidth amplifier + soft-404 SEO | Low | Public site / config | Open |
 | [BUG-070](./BUG-070-signin-accepts-form-urlencoded.md) | `/users/signin` accepts `application/x-www-form-urlencoded` — CORS-preflight bypass that becomes a full CSRF amplifier if any `/api/proxy/*` mutation endpoint also accepts it | Medium | Auth / API content-type | Open |
+| [BUG-071](./BUG-071-query-filters-silently-ignored.md) | `?from`, `?to`, `?since`, `?createdAt` filters accepted but silently ignored on `/transactions`, `/notifications`, `/groups` — dashboard widgets silently show all-time data instead of the filtered range | High | API / data model | Open |
+| [BUG-072](./BUG-072-users-admin-role-name-mismatch.md) | `/api/proxy/users/admin` uses ad-hoc role-name strings (`"super admins"` vs `"admins"`) across methods — none match the canonical role taxonomy; 400 instead of 403 on authz failure | Medium | API / authorisation | Open |
+| [BUG-073](./BUG-073-email-verification-inconsistent.md) | Email verification is enforced at signup (`400 "Please verify your email before signing in"`) but bypassable via `PATCH /users/update-profile` — strengthens BUG-063 ATO chain | High | Auth / profile API | Open |
 
 ## Severity scale
 
