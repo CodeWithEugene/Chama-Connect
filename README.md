@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–073 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–076 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
