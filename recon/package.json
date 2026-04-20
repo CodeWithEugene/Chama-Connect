@@ -1,0 +1,17 @@
+{
+  "name": "chamaconnect-recon",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playwright recon of chamaconnect.io — records bugs and API shape for ChamaPay",
+  "scripts": {
+    "test": "playwright test",
+    "explore": "playwright test tests/explore.spec.ts --headed",
+    "explore:headless": "playwright test tests/explore.spec.ts",
+    "install-browsers": "playwright install chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.47.0",
+    "dotenv": "^16.4.5",
+    "typescript": "^5.6.2"
+  }
+}

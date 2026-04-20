@@ -1,0 +1,42 @@
+{
+  "name": "chamapay",
+  "version": "0.1.0",
+  "private": true,
+  "description": "ChamaPay — M-Pesa-native contribution auto-reconciliation, USSD access, and on-chain receipts for ChamaConnect. Submission for the MUIAA x Salamander ChamaConnect Virtual Hackathon (deadline 2026-04-24).",
+  "scripts": {
+    "dev": "next dev -p 3100",
+    "build": "next build",
+    "start": "next start -p 3100",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "db:migrate": "tsx src/lib/db/migrate.ts",
+    "db:seed": "tsx src/lib/db/seed.ts",
+    "reconcile": "tsx src/lib/reconciliation/cli.ts",
+    "anchor": "tsx src/lib/anchor/cli.ts",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "next": "^14.2.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "better-sqlite3": "^11.3.0",
+    "zod": "^3.23.8",
+    "axios": "^1.7.7",
+    "nanoid": "^5.0.8",
+    "viem": "^2.21.45"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.2",
+    "tailwindcss": "^3.4.14",
+    "postcss": "^8.4.47",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^14.2.15",
+    "vitest": "^2.1.4"
+  }
+}
