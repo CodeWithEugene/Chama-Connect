@@ -83,6 +83,14 @@ Update this index when a new bug is filed.
 | [BUG-060](./BUG-060-null-bytes-accepted-in-string-fields.md) | Null bytes (`\u0000`) accepted and stored verbatim in group names and other string fields — enables filter bypass, log injection, and downstream null-termination truncation | Medium | API / input validation | Open |
 | [BUG-061](./BUG-061-hsts-missing-on-html-pages.md) | `Strict-Transport-Security` header present on API responses but absent from all HTML pages (homepage, login, admin) — SSL-strip downgrade attack viable on shared Wi-Fi | High | Web / HTTP headers | Open |
 | [BUG-062](./BUG-062-email-spoofing-weak-spf-dmarc.md) | SPF uses `~all` (softfail) and DMARC uses `p=quarantine` — spoofed `@chamaconnect.io` emails delivered to recipient spam/junk, enabling phishing and credential harvesting | Medium | Infrastructure / DNS | Open |
+| [BUG-063](./BUG-063-email-change-without-reverification.md) | **`PATCH /api/proxy/users/update-profile` changes email/firstName/lastName with no password re-entry, no OTP, no re-verification — one-shot ATO primitive for any leaked JWT; reproduced twice on live site** | **Critical** | Auth / Profile API | Open |
+| [BUG-064](./BUG-064-weak-password-policy.md) | Password policy accepts `"password"`, `"password123"`, and eight-space strings; 6-char minimum, no blacklist, no complexity, no HIBP check | High | Auth / signup | Open |
+| [BUG-065](./BUG-065-signin-case-sensitive-no-trim.md) | Signin performs exact-match on `email` — uppercase + whitespace variants all return `400 Invalid email or phone number`; silent lockout + enumeration amplifier | High | Auth / signin | Open |
+| [BUG-066](./BUG-066-no-signin-body-size-limit.md) | Signin accepts ≥ 100 KB request bodies with no `413`; bandwidth amplifier for credential-stuffing + log bloat | Medium | Auth / infrastructure | Open |
+| [BUG-067](./BUG-067-session-endpoint-unvalidated-token.md) | `POST /api/auth/session` sets `auth_token` cookie to any supplied value without verifying JWT signature — session-fixation / XSS-amplifier | Medium | Auth / Next.js bridge | Open |
+| [BUG-068](./BUG-068-missing-caa-record.md) | No `CAA` DNS record on `chamaconnect.io` — any publicly-trusted CA in the world may issue certs for the domain | Medium | DNS / TLS | Open |
+| [BUG-069](./BUG-069-404-returns-25kb-homepage.md) | Every unmatched path (including `/.env`, `/.git/HEAD`, `/swagger`, `/api/health`) returns a 26 KB HTML clone of the homepage — 130× bandwidth amplifier + soft-404 SEO | Low | Public site / config | Open |
+| [BUG-070](./BUG-070-signin-accepts-form-urlencoded.md) | `/users/signin` accepts `application/x-www-form-urlencoded` — CORS-preflight bypass that becomes a full CSRF amplifier if any `/api/proxy/*` mutation endpoint also accepts it | Medium | Auth / API content-type | Open |
 
 ## Severity scale
 
