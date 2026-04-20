@@ -94,6 +94,9 @@ Update this index when a new bug is filed.
 | [BUG-071](./BUG-071-query-filters-silently-ignored.md) | `?from`, `?to`, `?since`, `?createdAt` filters accepted but silently ignored on `/transactions`, `/notifications`, `/groups` — dashboard widgets silently show all-time data instead of the filtered range | High | API / data model | Open |
 | [BUG-072](./BUG-072-users-admin-role-name-mismatch.md) | `/api/proxy/users/admin` uses ad-hoc role-name strings (`"super admins"` vs `"admins"`) across methods — none match the canonical role taxonomy; 400 instead of 403 on authz failure | Medium | API / authorisation | Open |
 | [BUG-073](./BUG-073-email-verification-inconsistent.md) | Email verification is enforced at signup (`400 "Please verify your email before signing in"`) but bypassable via `PATCH /users/update-profile` — strengthens BUG-063 ATO chain | High | Auth / profile API | Open |
+| [BUG-074](./BUG-074-mass-assignment-silently-discarded.md) | `/users/update-profile` uses a correct write-allowlist (roleId/isSuperadmin/accountStatus can't be hijacked) but returns **200** on unknown keys — no 400 hard-reject, so client typos silently fail to persist | Low | API contract | Open |
+| [BUG-075](./BUG-075-form-urlencoded-platform-wide.md) | **Every** `/api/proxy/*` mutation endpoint accepts `application/x-www-form-urlencoded` and `multipart/form-data` — platform-wide CSRF surface (supersedes / escalates BUG-070 from "signin only" to "all mutations") | High | API / content-type / CSRF | Open |
+| [BUG-076](./BUG-076-live-backendhack-role-persisted.md) | **Live evidence of BUG-040: a `BackendHack` role created during probing still exists in the production `roles` table**, visible to every signed-in user and surfaced in the Create-Chama wizard dropdown | **Critical** | API / authz / data integrity | Open |
 
 ## Severity scale
 

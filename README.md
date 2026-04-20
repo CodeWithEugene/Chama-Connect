@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–062 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–073 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -164,8 +164,45 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-060](bugs/BUG-060-null-bytes-accepted-in-string-fields.md) | Null bytes (`\u0000`) stored verbatim in group names — enables filter bypass and downstream truncation | Medium | Open |
 | [BUG-061](bugs/BUG-061-hsts-missing-on-html-pages.md) | HSTS header present on API responses but absent on all HTML pages (login, homepage, admin) | High | Open |
 | [BUG-062](bugs/BUG-062-email-spoofing-weak-spf-dmarc.md) | SPF `~all` softfail + DMARC `p=quarantine` allow spoofed `@chamaconnect.io` emails to reach spam | Medium | Open |
+| [BUG-063](bugs/BUG-063-email-change-without-reverification.md) | **`PATCH /api/proxy/users/update-profile` changes email / firstName / lastName with no password re-entry, no OTP, no re-verification — one-shot account takeover for any leaked JWT; reproduced twice on live site** | **Critical** | Open |
+| [BUG-064](bugs/BUG-064-weak-password-policy.md) | Password policy accepts `"password"`, `"password123"`, and eight-space strings; 6-char minimum, no blacklist, no complexity, no HIBP check | High | Open |
+| [BUG-065](bugs/BUG-065-signin-case-sensitive-no-trim.md) | Signin is email-case-sensitive + does not trim whitespace — `EUGENEGABRIEL.KE@GMAIL.COM` returns `400 Invalid email`; silent lockout + enumeration amplifier | High | Open |
+| [BUG-066](bugs/BUG-066-no-signin-body-size-limit.md) | Signin accepts ≥ 100 KB request bodies with no `413` cap — bandwidth / log-bloat amplifier for credential-stuffing | Medium | Open |
+| [BUG-067](bugs/BUG-067-session-endpoint-unvalidated-token.md) | `POST /api/auth/session` sets the `auth_token` cookie to **any** supplied string without verifying the JWT signature — session-fixation / XSS amplifier (SameSite=Strict mitigates direct browser-CSRF but not the design flaw) | Medium | Open |
+| [BUG-068](bugs/BUG-068-missing-caa-record.md) | No `CAA` DNS record on `chamaconnect.io` — any publicly-trusted CA in the world may issue certs for the domain | Medium | Open |
+| [BUG-069](bugs/BUG-069-404-returns-25kb-homepage.md) | Every unmatched path (`/.env`, `/.git/HEAD`, `/swagger`, `/api/health`, …) returns a 26 KB HTML clone of the homepage — 130× bandwidth amplifier + soft-404 SEO | Low | Open |
+| [BUG-070](bugs/BUG-070-signin-accepts-form-urlencoded.md) | `/users/signin` accepts `application/x-www-form-urlencoded` — CORS-preflight bypass that becomes a full CSRF amplifier if any `/api/proxy/*` mutation endpoint also accepts it | Medium | Open |
+| [BUG-071](bugs/BUG-071-query-filters-silently-ignored.md) | `?from`, `?to`, `?since`, `?createdAt` filters accepted but silently ignored on `/transactions`, `/notifications`, `/groups` — dashboard widgets silently show all-time data instead of the filtered range | High | Open |
+| [BUG-072](bugs/BUG-072-users-admin-role-name-mismatch.md) | `/api/proxy/users/admin` uses ad-hoc role-name strings (`"super admins"` on GET vs `"admins"` on DELETE) — neither matches the canonical role taxonomy; 400 returned instead of 403 | Medium | Open |
+| [BUG-073](bugs/BUG-073-email-verification-inconsistent.md) | Email verification enforced at signup (`"Please verify your email before signing in"`) but bypassable via `PATCH /users/update-profile` — strengthens BUG-063 ATO chain | High | Open |
 
 **Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
+
+### Totals — 73 bugs on file (1 fixed, 72 open)
+
+- **15 Critical** — direct financial harm, secrets exposure, or one-shot account takeover (BUG-007 · 011 · 016 · 027 · 028 · 029 · 030 · 040 · 041 · 042 · 044 · 053 · 054 · 058 · 063).
+- **26 High** — auth hardening, BOLA reads, session lifetime, rate limits, stored XSS, filters silently ignored, weak password policy, HSTS, email-verification bypass, SEO metadata, and other exploit amplifiers.
+- **27 Medium** — consistency, routing collisions, API shape, accessibility, DNS / TLS posture.
+- **5 Low** — metadata polish, copy typos, stack-leak headers.
+
+### Audit methodology — how those bugs were found
+
+The register is backed by three distinct, reproducible evidence trails — all under `recon/`:
+
+1. **Authenticated platform crawl** — `recon/tests/explore.spec.ts` + `recon/tests/deep-interact.spec.ts` log in with the `.env` credentials, crawl every admin / chama / profile / settings route, and persist every XHR + response body to `recon/artifacts/deep-*/network/`. This is the source for BOLA (BUG-029/030/041/053), path traversal (BUG-044), credential leaks (BUG-028/042), roles CRUD (BUG-040), M-Pesa callback exposure (BUG-054) and most routing bugs.
+2. **Extended audit probes** — `recon/tests/audit-extended.spec.ts` (pass 1, 20 probes) and `recon/tests/audit-extended-2.spec.ts` (pass 2, 8 probes) target OWASP API Top-10 surfaces: static exposure, HTTP method tampering, content-type bypass, CSRF / cookies / logout, numeric edges, payload size, prototype pollution, open redirect, clickjacking, password strength, email-change / verification, cache-control, wallet-repair flag, CORS preflights, HEAD vs GET, mass assignment, file upload, form-urlencoded mutations, Daraja callback forgery, WebSocket auth, `/users/admin`, date-filter parsing. Each probe writes its raw artifact to `recon/artifacts/audit*/NN_*.json` so every bug cites a specific capture.
+3. **Static analysis** — captured client bundles in `recon/probes/bundles/*.js` plus DNS / TLS data in `recon/artifacts/dns-tls-audit/` were searched offline for hardcoded localhost URLs (BUG-011), exposed source maps, dead API paths, `/superadmin/dashboard` references, SPF / DMARC / CAA posture (BUG-062 / BUG-068) and similar.
+
+Re-run any pass end-to-end with:
+
+```bash
+cd recon && npm install && npx playwright install chromium
+npm test                                          # explore + deep-interact
+npx playwright test tests/audit-extended.spec.ts  # pass 1 probes (20)
+npx playwright test tests/audit-extended-2.spec.ts # pass 2 probes (8)
+```
+
+Pass-2 probes that mutate data (`21 mass-assignment`, `22 file upload`, `23 form-urlencoded mutations`, `25 emailVerified reset`) **gracefully skip** unless a fresh probe account with a completed email-verification OTP is available — so repeat runs are idempotent and side-effect-free against the live platform. One-shot account side-effects from earlier probe runs (a handful of `@probe.local` accounts and `+25470…` phone slots) are listed in BUG-064 and BUG-073 for MUIAA to purge.
 
 ## Reproducing the authenticated recon
 
