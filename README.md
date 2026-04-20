@@ -204,12 +204,13 @@ Re-run any pass end-to-end with:
 
 ```bash
 cd recon && npm install && npx playwright install chromium
-npm test                                          # explore + deep-interact
-npx playwright test tests/audit-extended.spec.ts  # pass 1 probes (20)
-npx playwright test tests/audit-extended-2.spec.ts # pass 2 probes (8)
+npm test                                            # explore + deep-interact
+npx playwright test tests/audit-extended.spec.ts    # pass 1 (20 probes)
+npx playwright test tests/audit-extended-2.spec.ts  # pass 2 (8 probes)
+npx playwright test tests/audit-extended-3.spec.ts  # pass 3 (5 probes)
 ```
 
-Pass-2 probes that mutate data (`21 mass-assignment`, `22 file upload`, `23 form-urlencoded mutations`, `25 emailVerified reset`) **gracefully skip** unless a fresh probe account with a completed email-verification OTP is available — so repeat runs are idempotent and side-effect-free against the live platform. One-shot account side-effects from earlier probe runs (a handful of `@probe.local` accounts and `+25470…` phone slots) are listed in BUG-064 and BUG-073 for MUIAA to purge.
+Pass-2 probes that mutate data (`21 mass-assignment`, `22 file upload`, `23 form-urlencoded mutations`, `25 emailVerified reset`) **gracefully skip** unless a fresh probe account with a completed email-verification OTP is available. Pass-3 mutation probes run against Eugene's account and include **explicit reverts** — profile picture, first/last name, and email are restored to their original values at the end of each test so repeat runs are idempotent and side-effect-free against the live platform. One-shot side-effects from earlier probe runs (a handful of `@probe.local` accounts, `+25470…` phone slots, and the `BackendHack` role) are listed in BUG-064, BUG-073, and BUG-076 for MUIAA to purge.
 
 ## Reproducing the authenticated recon
 
