@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–057 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–062 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -159,6 +159,11 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-055](bugs/BUG-055-transactions-limit-bypass-all-data.md) | `?limit=99999` dumps entire platform transaction ledger in one request (29 transactions, 7 chamas, 11 users) | High | Open |
 | [BUG-056](bugs/BUG-056-nan-infinity-crashes-api.md) | `NaN` / `Infinity` in any numeric field → `500` crash on every affected endpoint (DoS) | Medium | Open |
 | [BUG-057](bugs/BUG-057-withdrawal-fee-field-name-inconsistency.md) | `withDrawalFee` field casing inconsistency silently drops updates; sending canonical name nulls the field | Medium | Open |
+| [BUG-058](bugs/BUG-058-otp-plaintext-storage-and-exposure.md) | **OTP tokens stored in plaintext and returned in `current-user`/`signin` responses — JWT holder can read & use any pending OTP without email access** | **Critical** | Open |
+| [BUG-059](bugs/BUG-059-otp-not-invalidated-on-new-request.md) | New password-reset OTP request does not invalidate prior OTPs — 34+ concurrent valid codes observed | High | Open |
+| [BUG-060](bugs/BUG-060-null-bytes-accepted-in-string-fields.md) | Null bytes (`\u0000`) stored verbatim in group names — enables filter bypass and downstream truncation | Medium | Open |
+| [BUG-061](bugs/BUG-061-hsts-missing-on-html-pages.md) | HSTS header present on API responses but absent on all HTML pages (login, homepage, admin) | High | Open |
+| [BUG-062](bugs/BUG-062-email-spoofing-weak-spf-dmarc.md) | SPF `~all` softfail + DMARC `p=quarantine` allow spoofed `@chamaconnect.io` emails to reach spam | Medium | Open |
 
 **Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 

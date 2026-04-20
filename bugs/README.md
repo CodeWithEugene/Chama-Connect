@@ -78,6 +78,11 @@ Update this index when a new bug is filed.
 | [BUG-055](./BUG-055-transactions-limit-bypass-all-data.md) | `?limit=99999` dumps all 29 platform transactions from 7 chamas and 11 users in one request — no server-side pagination cap (amplifies BUG-030) | High | API | Open |
 | [BUG-056](./BUG-056-nan-infinity-crashes-api.md) | `NaN` / `Infinity` / `-Infinity` in any numeric field crashes the handler with `500 Internal Server Error` — DoS viable | Medium | API / input validation | Open |
 | [BUG-057](./BUG-057-withdrawal-fee-field-name-inconsistency.md) | `withDrawalFee` (capital D) field name inconsistency causes silent update failure; sending the canonical name via PUT can null the field | Medium | API / data model | Open |
+| [BUG-058](./BUG-058-otp-plaintext-storage-and-exposure.md) | **OTP tokens stored in plaintext AND returned in `current-user` + `signin` API responses — any JWT holder can read all pending OTPs and reset the victim's password without email access** | **Critical** | Auth / API | Open |
+| [BUG-059](./BUG-059-otp-not-invalidated-on-new-request.md) | Each OTP request creates a new record without invalidating previous ones — 34+ concurrent valid OTPs observed, compounding BUG-047 brute-force and BUG-058 plaintext exposure | High | Auth / API | Open |
+| [BUG-060](./BUG-060-null-bytes-accepted-in-string-fields.md) | Null bytes (`\u0000`) accepted and stored verbatim in group names and other string fields — enables filter bypass, log injection, and downstream null-termination truncation | Medium | API / input validation | Open |
+| [BUG-061](./BUG-061-hsts-missing-on-html-pages.md) | `Strict-Transport-Security` header present on API responses but absent from all HTML pages (homepage, login, admin) — SSL-strip downgrade attack viable on shared Wi-Fi | High | Web / HTTP headers | Open |
+| [BUG-062](./BUG-062-email-spoofing-weak-spf-dmarc.md) | SPF uses `~all` (softfail) and DMARC uses `p=quarantine` — spoofed `@chamaconnect.io` emails delivered to recipient spam/junk, enabling phishing and credential harvesting | Medium | Infrastructure / DNS | Open |
 
 ## Severity scale
 
