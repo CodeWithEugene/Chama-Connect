@@ -30,7 +30,7 @@ Chama-Connect/
 ├── bugs/                       ← bug register (evidence + root cause + fix)
 │   ├── README.md               ← index + severity scale
 │   ├── _template.md            ← filing template
-│   └── BUG-NNN-*.md            ← one file per bug (001–052 today)
+│   └── BUG-NNN-*.md            ← one file per bug (001–057 today)
 │
 ├── chamapay/                   ← the deliverable (standalone Next.js app)
 │   ├── src/
@@ -154,6 +154,11 @@ Each row links to a standalone report (evidence, impact, root cause, proposed fi
 | [BUG-050](bugs/BUG-050-stored-xss-group-name.md) | Stored XSS: group name stores raw `<script>` tags without sanitization — persists in DB, returned in API responses | High | Open |
 | [BUG-051](bugs/BUG-051-roles-routing-collision-500.md) | `GET /api/proxy/roles/permissions` + `/roles/assign` return `500` (routing collision) | Medium | Open |
 | [BUG-052](bugs/BUG-052-notifications-routing-500.md) | `/notifications/mark-all-read` (wrong method), `/clear` (all methods), `/all` all return `500` | Medium | Open |
+| [BUG-053](bugs/BUG-053-bola-group-member-role-patch.md) | **BOLA: any user can `PATCH /groups/:id/members/:memberId` to change ANY chama member's role — including promoting strangers to Treasurer/ChamaAdmin** | **Critical** | Open |
+| [BUG-054](bugs/BUG-054-mpesa-callback-no-auth.md) | **M-Pesa callback endpoint publicly reachable, no auth/IP/signature validation — forged STK callbacks can fake contribution payments** | **Critical** | Open |
+| [BUG-055](bugs/BUG-055-transactions-limit-bypass-all-data.md) | `?limit=99999` dumps entire platform transaction ledger in one request (29 transactions, 7 chamas, 11 users) | High | Open |
+| [BUG-056](bugs/BUG-056-nan-infinity-crashes-api.md) | `NaN` / `Infinity` in any numeric field → `500` crash on every affected endpoint (DoS) | Medium | Open |
+| [BUG-057](bugs/BUG-057-withdrawal-fee-field-name-inconsistency.md) | `withDrawalFee` field casing inconsistency silently drops updates; sending canonical name nulls the field | Medium | Open |
 
 **Severity (short):** Critical → core job blocked **or** security-critical data exposure/modification; High → trust, security, or major product surface; Medium → clear UX or consistency break; Low → polish / conversion nits.
 

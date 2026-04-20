@@ -73,6 +73,11 @@ Update this index when a new bug is filed.
 | [BUG-050](./BUG-050-stored-xss-group-name.md) | Stored XSS: group name accepts raw HTML including `<script>` tags without any sanitization — payload persists in DB, returned in API responses, exploitable in email/PDF/SSR contexts | High | API / input validation | Open |
 | [BUG-051](./BUG-051-roles-routing-collision-500.md) | `GET /api/proxy/roles/permissions` and `/roles/assign` return `500` — same routing collision pattern as BUG-049 | Medium | API / routing | Open |
 | [BUG-052](./BUG-052-notifications-routing-500.md) | `GET /api/proxy/notifications/mark-all-read`, `/clear`, `/all` return `500` (routing collision + unimplemented handler); `clear` broken on all methods | Medium | API / routing | Open |
+| [BUG-053](./BUG-053-bola-group-member-role-patch.md) | **BOLA: `PATCH /api/proxy/groups/:id/members/:memberId` — any authenticated user can change the role of ANY member in ANY chama (confirmed on multiple real members)** | **Critical** | API / authz | Open |
+| [BUG-054](./BUG-054-mpesa-callback-no-auth.md) | **M-Pesa STK callback endpoint publicly accessible with no auth, no IP allowlist, no Safaricom signature — forged success callbacks accepted, enabling fake contribution credits** | **Critical** | API / M-Pesa / financial | Open |
+| [BUG-055](./BUG-055-transactions-limit-bypass-all-data.md) | `?limit=99999` dumps all 29 platform transactions from 7 chamas and 11 users in one request — no server-side pagination cap (amplifies BUG-030) | High | API | Open |
+| [BUG-056](./BUG-056-nan-infinity-crashes-api.md) | `NaN` / `Infinity` / `-Infinity` in any numeric field crashes the handler with `500 Internal Server Error` — DoS viable | Medium | API / input validation | Open |
+| [BUG-057](./BUG-057-withdrawal-fee-field-name-inconsistency.md) | `withDrawalFee` (capital D) field name inconsistency causes silent update failure; sending the canonical name via PUT can null the field | Medium | API / data model | Open |
 
 ## Severity scale
 
