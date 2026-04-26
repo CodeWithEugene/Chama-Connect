@@ -34,10 +34,17 @@ You should see:
 
 Open a second shell. Simulate a correct payment — member's phone matches, account ref is well-formed:
 
+**Bash/macOS/Linux:**
 ```bash
 curl -sX POST http://localhost:3100/api/dev/simulate-c2b \
      -H 'content-type: application/json' \
      -d '{"msisdn":"254711223344","amount":500,"billRef":"ACME-202604"}' | jq
+```
+
+**PowerShell/Windows:**
+```powershell
+curl.exe -sX POST http://localhost:3100/api/dev/simulate-c2b -H 'content-type: application/json' `
+     -d '{"msisdn":"254711223344","amount":500,"billRef":"ACME-202604"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
 ```
 
 Expected response:
@@ -62,6 +69,7 @@ Switch back to the dashboard tab. Within 3 seconds, `Brian Otieno` flips from **
 
 Three more simulated payments demonstrate the matcher:
 
+**Bash/macOS/Linux:**
 ```bash
 # Correct — matches Caroline by MSISDN even though ref has a typo
 curl -sX POST http://localhost:3100/api/dev/simulate-c2b -H 'content-type: application/json' \
@@ -76,6 +84,21 @@ curl -sX POST http://localhost:3100/api/dev/simulate-c2b -H 'content-type: appli
      -d '{"msisdn":"254711223344","amount":500,"billRef":"ACME-202604","transId":"<paste-previous-TransID>"}' | jq
 ```
 
+**PowerShell/Windows:**
+```powershell
+# Correct — matches Caroline by MSISDN even though ref has a typo
+curl.exe -sX POST http://localhost:3100/api/dev/simulate-c2b -H 'content-type: application/json' `
+     -d '{"msisdn":"254722334455","amount":750,"billRef":"ACMMM-202604"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
+
+# Unknown MSISDN + unknown prefix → lands in admin review queue
+curl.exe -sX POST http://localhost:3100/api/dev/simulate-c2b -H 'content-type: application/json' `
+     -d '{"msisdn":"254799999999","amount":500,"billRef":"XYZ-202604"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
+
+# Replay the first payment (same TransID) — idempotent, no double-credit
+curl.exe -sX POST http://localhost:3100/api/dev/simulate-c2b -H 'content-type: application/json' `
+     -d '{"msisdn":"254711223344","amount":500,"billRef":"ACME-202604","transId":"<paste-previous-TransID>"}' | ConvertFrom-Json | ConvertTo-Json -Depth 10
+```
+
 Narration points for the demo video:
 
 1. *"The engine matched Caroline by MSISDN alone, at 90% confidence — the ref was mistyped but the phone number was a unique hit."*
@@ -86,6 +109,7 @@ Narration points for the demo video:
 
 Africa's Talking sandbox isn't required — the USSD handler can be fed directly:
 
+**Bash/macOS/Linux:**
 ```bash
 curl -sX POST http://localhost:3100/api/ussd \
      -d 'sessionId=demo&serviceCode=*384*1#&phoneNumber=%2B254708374149&text=' 
@@ -97,6 +121,22 @@ curl -sX POST http://localhost:3100/api/ussd \
 #     5. Exit"
 
 curl -sX POST http://localhost:3100/api/ussd \
+     -d 'sessionId=demo&serviceCode=*384*1#&phoneNumber=%2B254708374149&text=1'
+# → "END Hi Alice. Contributed this cycle: KES 0. Expected: KES 500."
+```
+
+**PowerShell/Windows:**
+```powershell
+curl.exe -sX POST http://localhost:3100/api/ussd `
+     -d 'sessionId=demo&serviceCode=*384*1#&phoneNumber=%2B254708374149&text='
+# → "CON ChamaPay — Acme Savers Chama
+#     1. My balance
+#     2. Contribute
+#     3. Request loan
+#     4. Recent payments
+#     5. Exit"
+
+curl.exe -sX POST http://localhost:3100/api/ussd `
      -d 'sessionId=demo&serviceCode=*384*1#&phoneNumber=%2B254708374149&text=1'
 # → "END Hi Alice. Contributed this cycle: KES 0. Expected: KES 500."
 ```
@@ -123,8 +163,15 @@ DARAJA_CALLBACK_BASE=https://<your-ngrok>.ngrok.app
 
 Register callback URLs once:
 
+**Bash/macOS/Linux:**
 ```bash
 curl -X POST http://localhost:3100/api/mpesa/c2b/register
+# (internal helper — available in the admin chamas page too)
+```
+
+**PowerShell/Windows:**
+```powershell
+curl.exe -X POST http://localhost:3100/api/mpesa/c2b/register
 # (internal helper — available in the admin chamas page too)
 ```
 
